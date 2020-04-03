@@ -2,56 +2,61 @@
 
 const cardsArray = [{
             name: "vue",
-            img: "img/logo-vue.png"
+            img: "img/logo-vue.png",
         },
         {
             name: "angular",
-            img: "img/logo-angular.png"
+            img: "img/logo-angular.png",
         },
         {
             name: "golang",
-            img: "img/logo-golang.png"
+            img: "img/logo-golang.png",
         },
         {
             name: "html",
-            img: "img/logo-html.png"
+            img: "img/logo-html.png",
         },
         {
             name: "css",
-            img: "img/logo-css.png"
+            img: "img/logo-css.png",
         },
         {
             name: "android",
-            img: "img/logo-android.png"
+            img: "img/logo-android.png",
         },
         {
             name: "js",
-            img: "img/logo-js.png"
+            img: "img/logo-js.png",
         },
         {
             name: "php",
-            img: "img/logo-php.png"
+            img: "img/logo-php.png",
         },
         {
             name: "python",
-            img: "img/logo-python.png"
+            img: "img/logo-python.png",
         },
         {
             name: "ruby",
-            img: "img/logo-ruby.png"
+            img: "img/logo-ruby.png",
         },
         {
             name: "swift",
-            img: "img/logo-swift.png"
+            img: "img/logo-swift.png",
         },
         {
             name: "react",
-            img: "img/logo-react.png"
-        }
+            img: "img/logo-react.png",
+        },
     ],
     gameGrid = [...cardsArray, ...cardsArray].sort(() => 0.5 - Math.random()),
     game = document.querySelector("#game"),
     grid = document.createElement("section"),
+    groupButtons = document.createElement("section"),
+    btnStart = document.createElement("button"),
+    btnRestart = document.createElement("button"),
+    spanCounterSucces = document.querySelector(".counter-success"),
+    spanCounterFailed = document.querySelector(".counter-failed"),
     match = () => {
         let allCardSelected = document.querySelectorAll(".selected");
 
@@ -74,17 +79,48 @@ let count = 0,
     firstGuess = '',
     secondGuess = '',
     previousTarget = null,
-    delay = 1200;
+    delay = 1200,
+    hours = `00`,
+    minutes = `00`,
+    seconds = `00`,
+    counterSuccess = 0,
+    counterFailed = 0;
 
 grid.setAttribute('class', 'grid');
+groupButtons.setAttribute("class", "box-buttons");
+btnRestart.classList.add("btn", "btn-blue");
+btnStart.classList.add("btn", "btn-blue");
+
+btnRestart.innerText = "Restart Game";
+btnStart.innerText = "Start Game";
+
 game.appendChild(grid);
+groupButtons.appendChild(btnStart);
+groupButtons.appendChild(btnRestart);
+game.appendChild(groupButtons);
+spanCounterSucces.innerText = counterSuccess;
+spanCounterFailed.innerText = counterFailed;
+
+btnStart.addEventListener("click", function(event) {
+    const allCards = grid.children;
+
+    for (const card of allCards) {
+        if (card.classList.contains("disabled-card")) {
+            card.classList.remove("disabled-card");
+        }
+    }
+
+    setInterval(chronometer, 1000);
+    event.target.disabled = true;
+})
+
 
 for (const item of gameGrid) {
     const card = document.createElement('div'),
         front = document.createElement('div'),
         back = document.createElement('div');
 
-    card.setAttribute('class', 'card');
+    card.classList.add("card", "disabled-card");
     card.dataset.name = item.name;
     front.setAttribute('class', 'front');
     back.setAttribute('class', 'back');
@@ -104,7 +140,8 @@ function addClassSelected(event) {
         clicked.nodeName === "SECTION" ||
         clicked === previousTarget ||
         clicked.parentNode.classList.contains("selected") ||
-        clicked.parentNode.classList.contains("match")
+        clicked.parentNode.classList.contains("match") ||
+        clicked.parentNode.classList.contains("disabled-card")
     ) {
         return;
     }
@@ -124,9 +161,42 @@ function addClassSelected(event) {
         if (firstGuess !== '' & secondGuess !== '') {
             if (firstGuess === secondGuess) {
                 setTimeout(match, delay);
+                counterSuccess += 1;
+                spanCounterSucces.innerText = counterSuccess;
+            } else {
+                counterFailed += 1;
+                spanCounterFailed.innerText = counterFailed;
             }
             setTimeout(resetGuess, delay);
         }
         previousTarget = clicked;
     }
+}
+
+function chronometer() {
+
+    seconds++;
+
+    if (seconds < 10) {
+        seconds = `0` + seconds;
+    }
+
+    if (seconds > 59) {
+        seconds = `00`;
+        minutes++;
+
+        if (minutes < 10) {
+            minutes = `0` + minutes;
+        }
+    }
+
+    if (minutes > 59) {
+        minutes = `00`;
+        hours++;
+
+        if (hours < 10) {
+            hours = `0` + hours
+        }
+    }
+    console.log(`${hours}:${minutes}:${seconds}`);
 }
