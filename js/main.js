@@ -95,23 +95,28 @@ const topNav = document.createElement("div"),
     labelMatch = document.createElement("div"),
     labelFailed = document.createElement("div"),
     spanCounterMatch = document.createElement("div"),
-    spanCounterFailed = document.createElement("div");
+    spanCounterFailed = document.createElement("div"),
+    div = document.createElement("div"),
+    chronometerDisplay = document.createElement("div");
 
-topNav.setAttribute("class", "topnav");
+topNav.classList.add("space-between", "topnav");
+chronometerDisplay.classList.add("counter", "counter-digit", "chronometer");
 scoreMatch.setAttribute("class", "score");
 scoreFailed.setAttribute("class", "score");
 labelFailed.setAttribute("class", "label");
 labelMatch.setAttribute("class", "label");
-spanCounterFailed.setAttribute("class", "counter");
+spanCounterFailed.classList.add("counter-digit", "counter");
 spanCounterFailed.setAttribute("id", "counterFailed");
-spanCounterMatch.setAttribute("class", "counter");
+spanCounterMatch.classList.add("counter-digit", "counter");
 spanCounterMatch.setAttribute("id", "counterMatch");
 
 labelFailed.innerText = "Failed";
 labelMatch.innerText = "Match";
 
-topNav.appendChild(scoreMatch);
-topNav.appendChild(scoreFailed);
+topNav.appendChild(div);
+topNav.appendChild(chronometerDisplay);
+div.appendChild(scoreMatch);
+div.appendChild(scoreFailed);
 scoreMatch.appendChild(labelMatch);
 scoreMatch.appendChild(spanCounterMatch);
 scoreFailed.appendChild(labelFailed);
@@ -132,6 +137,7 @@ groupButtons.appendChild(btnRestart);
 game.appendChild(groupButtons);
 spanCounterMatch.innerText = counterMatch;
 spanCounterFailed.innerText = counterFailed;
+chronometerDisplay.innerText = "00:00:00";
 
 btnStart.addEventListener("click", function(event) {
     const allCards = grid.children;
@@ -163,6 +169,7 @@ btnRestart.addEventListener("click", function(event) {
     hours = "00";
     minutes = "00";
     seconds = "00";
+    chronometerDisplay.innerText = `${hours}:${minutes}:${seconds}`;
     btnStart.disabled = false;
     event.target.disabled = true;
 });
@@ -250,5 +257,5 @@ function chronometer() {
             hours = `0` + hours;
         }
     }
-    console.log(`${hours}:${minutes}:${seconds}`);
+    chronometerDisplay.innerText = `${hours}:${minutes}:${seconds}`;
 }

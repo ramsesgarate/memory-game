@@ -15,6 +15,7 @@ body {
 }
 
 .topnav {
+    display: flex;
     overflow: hidden;
     background-color: #1cb0f6;
     margin-bottom: 1rem;
@@ -159,7 +160,20 @@ body {
     float: left;
 }
 
-.counter {
+.counter-digit {
     font-size: 2em;
     font-family: Digital;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.space-around {
+    justify-content: space-around;
+}
+
+.chronometer {
+    padding: 5px 8px;
+    font-size: 3rem;
 }
