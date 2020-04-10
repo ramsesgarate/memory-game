@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const cardsArray = [{
             name: "vue",
@@ -55,13 +55,15 @@ const cardsArray = [{
     groupButtons = document.createElement("section"),
     btnStart = document.createElement("button"),
     btnRestart = document.createElement("button"),
-    spanCounterSucces = document.querySelector(".counter-success"),
-    spanCounterFailed = document.querySelector(".counter-failed"),
     match = () => {
         let allCardSelected = document.querySelectorAll(".selected");
 
         for (const card of allCardSelected) {
             card.classList.add("match");
+        }
+
+        if (counterMatch === 12) {
+            clearInterval(chronometerCall);
         }
     },
     resetGuess = () => {
@@ -76,17 +78,46 @@ const cardsArray = [{
     };
 
 let count = 0,
-    firstGuess = '',
-    secondGuess = '',
+    firstGuess = "",
+    secondGuess = "",
     previousTarget = null,
     delay = 1200,
     hours = `00`,
     minutes = `00`,
     seconds = `00`,
-    counterSuccess = 0,
-    counterFailed = 0;
+    counterMatch = 0,
+    counterFailed = 0,
+    chronometerCall;
 
-grid.setAttribute('class', 'grid');
+const topNav = document.createElement("div"),
+    scoreMatch = document.createElement("div"),
+    scoreFailed = document.createElement("div"),
+    labelMatch = document.createElement("div"),
+    labelFailed = document.createElement("div"),
+    spanCounterMatch = document.createElement("div"),
+    spanCounterFailed = document.createElement("div");
+
+topNav.setAttribute("class", "topnav");
+scoreMatch.setAttribute("class", "score");
+scoreFailed.setAttribute("class", "score");
+labelFailed.setAttribute("class", "label");
+labelMatch.setAttribute("class", "label");
+spanCounterFailed.setAttribute("class", "counter");
+spanCounterFailed.setAttribute("id", "counterFailed");
+spanCounterMatch.setAttribute("class", "counter");
+spanCounterMatch.setAttribute("id", "counterMatch");
+
+labelFailed.innerText = "Failed";
+labelMatch.innerText = "Match";
+
+topNav.appendChild(scoreMatch);
+topNav.appendChild(scoreFailed);
+scoreMatch.appendChild(labelMatch);
+scoreMatch.appendChild(spanCounterMatch);
+scoreFailed.appendChild(labelFailed);
+scoreFailed.appendChild(spanCounterFailed);
+
+grid.setAttribute("class", "grid");
 groupButtons.setAttribute("class", "box-buttons");
 btnRestart.classList.add("btn", "btn-blue");
 btnStart.classList.add("btn", "btn-blue");
@@ -94,11 +125,12 @@ btnStart.classList.add("btn", "btn-blue");
 btnRestart.innerText = "Restart Game";
 btnStart.innerText = "Start Game";
 
+game.appendChild(topNav);
 game.appendChild(grid);
 groupButtons.appendChild(btnStart);
 groupButtons.appendChild(btnRestart);
 game.appendChild(groupButtons);
-spanCounterSucces.innerText = counterSuccess;
+spanCounterMatch.innerText = counterMatch;
 spanCounterFailed.innerText = counterFailed;
 
 btnStart.addEventListener("click", function(event) {
@@ -110,20 +142,19 @@ btnStart.addEventListener("click", function(event) {
         }
     }
 
-    setInterval(chronometer, 1000);
+    chronometerCall = setInterval(chronometer, 1000);
     event.target.disabled = true;
-})
-
+});
 
 for (const item of gameGrid) {
-    const card = document.createElement('div'),
-        front = document.createElement('div'),
-        back = document.createElement('div');
+    const card = document.createElement("div"),
+        front = document.createElement("div"),
+        back = document.createElement("div");
 
     card.classList.add("card", "disabled-card");
     card.dataset.name = item.name;
-    front.setAttribute('class', 'front');
-    back.setAttribute('class', 'back');
+    front.setAttribute("class", "front");
+    back.setAttribute("class", "back");
     back.style.backgroundImage = `url(${item.img})`;
 
     grid.appendChild(card);
@@ -158,23 +189,23 @@ function addClassSelected(event) {
             clicked.parentNode.classList.add("selected");
         }
 
-        if (firstGuess !== '' & secondGuess !== '') {
+        if (firstGuess && secondGuess) {
             if (firstGuess === secondGuess) {
                 setTimeout(match, delay);
-                counterSuccess += 1;
-                spanCounterSucces.innerText = counterSuccess;
+                counterMatch += 1;
+                spanCounterMatch.innerText = counterMatch;
             } else {
                 counterFailed += 1;
                 spanCounterFailed.innerText = counterFailed;
             }
             setTimeout(resetGuess, delay);
+        } else {
+            previousTarget = clicked;
         }
-        previousTarget = clicked;
     }
 }
 
 function chronometer() {
-
     seconds++;
 
     if (seconds < 10) {
@@ -195,7 +226,7 @@ function chronometer() {
         hours++;
 
         if (hours < 10) {
-            hours = `0` + hours
+            hours = `0` + hours;
         }
     }
     console.log(`${hours}:${minutes}:${seconds}`);
