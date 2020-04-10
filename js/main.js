@@ -144,6 +144,27 @@ btnStart.addEventListener("click", function(event) {
 
     chronometerCall = setInterval(chronometer, 1000);
     event.target.disabled = true;
+    btnRestart.disabled = false;
+});
+
+btnRestart.addEventListener("click", function(event) {
+    let allCar = document.querySelectorAll(".card");
+
+    for (const card of allCar) {
+        card.classList.remove("match");
+        card.classList.add("disabled-card");
+    }
+
+    clearInterval(chronometerCall);
+    counterFailed = 0;
+    counterMatch = 0;
+    spanCounterFailed.innerText = counterFailed;
+    spanCounterMatch.innerText = counterMatch;
+    hours = "00";
+    minutes = "00";
+    seconds = "00";
+    btnStart.disabled = false;
+    event.target.disabled = true;
 });
 
 for (const item of gameGrid) {
