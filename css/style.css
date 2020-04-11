@@ -122,6 +122,8 @@ body {
     font-size: 16px;
     font-weight: 700;
     letter-spacing: 0.8px;
+    text-align: center;
+    vertical-align: middle;
     margin: 2rem 1rem 0 1rem;
 }
 
@@ -176,4 +178,12 @@ body {
 .chronometer {
     padding: 5px 8px;
     font-size: 3rem;
+    color: #fff;
+}
+
+.text-style {
+    font-size: 22px;
+    letter-spacing: 0.8px;
+    font-weight: bold;
+    font-family: cursive;
 }

@@ -55,7 +55,29 @@ const cardsArray = [{
     groupButtons = document.createElement("section"),
     btnStart = document.createElement("button"),
     btnRestart = document.createElement("button"),
-    match = () => {
+    topNav = document.createElement("div"),
+    scoreMatch = document.createElement("div"),
+    scoreFailed = document.createElement("div"),
+    labelMatch = document.createElement("div"),
+    labelFailed = document.createElement("div"),
+    spanCounterMatch = document.createElement("div"),
+    spanCounterFailed = document.createElement("div"),
+    div = document.createElement("div"),
+    chronometerDisplay = document.createElement("div");
+
+let count = 0,
+    firstGuess = "",
+    secondGuess = "",
+    previousTarget = null,
+    delay = 1200,
+    hours = `00`,
+    minutes = `00`,
+    seconds = `00`,
+    counterMatch = 0,
+    counterFailed = 0,
+    chronometerCall;
+
+const match = () => {
         let allCardSelected = document.querySelectorAll(".selected");
 
         for (const card of allCardSelected) {
@@ -77,41 +99,28 @@ const cardsArray = [{
         }
     };
 
-let count = 0,
-    firstGuess = "",
-    secondGuess = "",
-    previousTarget = null,
-    delay = 1200,
-    hours = `00`,
-    minutes = `00`,
-    seconds = `00`,
-    counterMatch = 0,
-    counterFailed = 0,
-    chronometerCall;
-
-const topNav = document.createElement("div"),
-    scoreMatch = document.createElement("div"),
-    scoreFailed = document.createElement("div"),
-    labelMatch = document.createElement("div"),
-    labelFailed = document.createElement("div"),
-    spanCounterMatch = document.createElement("div"),
-    spanCounterFailed = document.createElement("div"),
-    div = document.createElement("div"),
-    chronometerDisplay = document.createElement("div");
-
 topNav.classList.add("space-between", "topnav");
 chronometerDisplay.classList.add("counter", "counter-digit", "chronometer");
 scoreMatch.setAttribute("class", "score");
 scoreFailed.setAttribute("class", "score");
-labelFailed.setAttribute("class", "label");
-labelMatch.setAttribute("class", "label");
+labelFailed.classList.add("text-style", "label");
+labelMatch.classList.add("text-style", "label");
 spanCounterFailed.classList.add("counter-digit", "counter");
 spanCounterFailed.setAttribute("id", "counterFailed");
 spanCounterMatch.classList.add("counter-digit", "counter");
 spanCounterMatch.setAttribute("id", "counterMatch");
+grid.setAttribute("class", "grid");
+groupButtons.setAttribute("class", "box-buttons");
+btnRestart.classList.add("btn", "btn-blue");
+btnStart.classList.add("btn", "btn-blue");
 
 labelFailed.innerText = "Failed";
 labelMatch.innerText = "Match";
+spanCounterMatch.innerText = counterMatch;
+spanCounterFailed.innerText = counterFailed;
+chronometerDisplay.innerText = "00:00:00";
+btnRestart.innerText = "Restart Game";
+btnStart.innerText = "Start Game";
 
 topNav.appendChild(div);
 topNav.appendChild(chronometerDisplay);
@@ -121,23 +130,11 @@ scoreMatch.appendChild(labelMatch);
 scoreMatch.appendChild(spanCounterMatch);
 scoreFailed.appendChild(labelFailed);
 scoreFailed.appendChild(spanCounterFailed);
-
-grid.setAttribute("class", "grid");
-groupButtons.setAttribute("class", "box-buttons");
-btnRestart.classList.add("btn", "btn-blue");
-btnStart.classList.add("btn", "btn-blue");
-
-btnRestart.innerText = "Restart Game";
-btnStart.innerText = "Start Game";
-
 game.appendChild(topNav);
 game.appendChild(grid);
 groupButtons.appendChild(btnStart);
 groupButtons.appendChild(btnRestart);
 game.appendChild(groupButtons);
-spanCounterMatch.innerText = counterMatch;
-spanCounterFailed.innerText = counterFailed;
-chronometerDisplay.innerText = "00:00:00";
 
 btnStart.addEventListener("click", function(event) {
     const allCards = grid.children;
@@ -157,7 +154,9 @@ btnRestart.addEventListener("click", function(event) {
     let allCar = document.querySelectorAll(".card");
 
     for (const card of allCar) {
-        card.classList.remove("match");
+        if (card.classList.contains("disabled-card")) {
+            card.classList.remove("match");
+        }
         card.classList.add("disabled-card");
     }
 
@@ -190,9 +189,7 @@ for (const item of gameGrid) {
     card.appendChild(back);
 }
 
-grid.addEventListener("click", addClassSelected);
-
-function addClassSelected(event) {
+grid.addEventListener("click", function() {
     let clicked = event.target;
 
     if (
@@ -209,11 +206,9 @@ function addClassSelected(event) {
         count += 1;
         if (count === 1) {
             firstGuess = clicked.parentNode.dataset.name;
-            console.log(firstGuess);
             clicked.parentNode.classList.add("selected");
         } else {
             secondGuess = clicked.parentNode.dataset.name;
-            console.log(secondGuess);
             clicked.parentNode.classList.add("selected");
         }
 
@@ -227,35 +222,37 @@ function addClassSelected(event) {
                 spanCounterFailed.innerText = counterFailed;
             }
             setTimeout(resetGuess, delay);
+            previousTarget = null;
         } else {
             previousTarget = clicked;
         }
     }
-}
+});
 
 function chronometer() {
     seconds++;
 
     if (seconds < 10) {
-        seconds = `0` + seconds;
+        seconds = "0" + seconds;
     }
 
     if (seconds > 59) {
-        seconds = `00`;
+        seconds = "00";
         minutes++;
 
         if (minutes < 10) {
-            minutes = `0` + minutes;
+            minutes = "0" + minutes;
         }
     }
 
     if (minutes > 59) {
-        minutes = `00`;
+        minutes = "00";
         hours++;
 
         if (hours < 10) {
-            hours = `0` + hours;
+            hours = "0" + hours;
         }
     }
+
     chronometerDisplay.innerText = `${hours}:${minutes}:${seconds}`;
 }
