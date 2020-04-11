@@ -51,7 +51,6 @@ const cardsArray = [{
             img: "img/logo-react.png",
         },
     ],
-    gameGrid = mixCards([...cardsArray, ...cardsArray]),
     game = document.querySelector("#game"),
     grid = document.createElement("section"),
     groupButtons = document.createElement("section"),
@@ -68,6 +67,7 @@ const cardsArray = [{
     chronometerDisplay = document.createElement("div");
 
 let count = 0,
+    gameGrid = mixCards([...cardsArray, ...cardsArray]),
     firstGuess = "",
     secondGuess = "",
     previousTarget = null,
@@ -99,6 +99,15 @@ const match = () => {
         for (const card of allCardSelected) {
             card.classList.remove("selected");
         }
+    },
+    mixGameGrid = () => {
+        gameGrid = mixCards(gameGrid);
+        const allCards = grid.childNodes;
+
+        allCards.forEach((card, index) => {
+            card.dataset.name = gameGrid[index].name;
+            card.childNodes[1].style.backgroundImage = `url(${gameGrid[index].img})`;
+        });
     };
 
 topNav.classList.add("space-between", "topnav");
@@ -164,6 +173,8 @@ btnRestart.addEventListener("click", function(event) {
 
         card.classList.add("disabled-card");
     }
+
+    mixGameGrid();
 
     clearInterval(chronometerCall);
     resetGuess();
