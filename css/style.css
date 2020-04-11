@@ -111,7 +111,7 @@ body {
 .btn-blue {
     background-color: #1cb0f6;
     border-color: #1899d6;
-    color: #ffffff;
+    color: #fff;
 }
 
 .btn {
@@ -132,6 +132,13 @@ body {
     border-width: 0;
     margin-bottom: 4px;
     transform: translate3d(0, 4px, 0);
+}
+
+.btn-disabled {
+    background-color: #dad4d3;
+    border-color: #989494;
+    color: #fff;
+    border-width: 0;
 }
 
 .sidebar {

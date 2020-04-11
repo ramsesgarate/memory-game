@@ -113,7 +113,7 @@ spanCounterMatch.classList.add("counter-digit", "counter");
 spanCounterMatch.setAttribute("id", "counterMatch");
 grid.setAttribute("class", "grid");
 groupButtons.setAttribute("class", "box-buttons");
-btnRestart.classList.add("btn", "btn-blue");
+btnRestart.classList.add("btn", "btn-blue", "btn-disabled");
 btnStart.classList.add("btn", "btn-blue");
 
 labelFailed.innerText = "Failed";
@@ -149,24 +149,24 @@ btnStart.addEventListener("click", function(event) {
 
     chronometerCall = setInterval(chronometer, 1000);
     event.target.disabled = true;
+    event.target.classList.add("btn-disabled");
     btnRestart.disabled = false;
+    btnRestart.classList.remove("btn-disabled");
 });
 
 btnRestart.addEventListener("click", function(event) {
-    let allCar = grid.querySelectorAll(".card");
+    let allCard = grid.childNodes;
 
-    for (const card of allCar) {
-        if (
-            card.classList.contains("match") ||
-            card.classList.contains("selected")
-        ) {
+    for (const card of allCard) {
+        if (card.classList.contains("match")) {
             card.classList.remove("match");
-            card.classList.remove("selected");
         }
+
         card.classList.add("disabled-card");
     }
 
     clearInterval(chronometerCall);
+    resetGuess();
     counterFailed = 0;
     counterMatch = 0;
     spanCounterFailed.innerText = counterFailed;
@@ -176,9 +176,10 @@ btnRestart.addEventListener("click", function(event) {
     seconds = "00";
     chronometerDisplay.innerText = `${hours}:${minutes}:${seconds}`;
     btnStart.disabled = false;
+    btnStart.classList.remove("btn-disabled");
     event.target.disabled = true;
-    firstGuess = null;
-    secondGuess = null;
+    event.target.classList.add("btn-disabled");
+    previousTarget = null;
 });
 
 for (const item of gameGrid) {
