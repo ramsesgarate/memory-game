@@ -1,5 +1,7 @@
 "use strict";
 
+const mixCards = (arrayCards) => arrayCards.sort(() => 0.5 - Math.random());
+
 const cardsArray = [{
             name: "vue",
             img: "img/logo-vue.png",
@@ -49,7 +51,7 @@ const cardsArray = [{
             img: "img/logo-react.png",
         },
     ],
-    gameGrid = [...cardsArray, ...cardsArray].sort(() => 0.5 - Math.random()),
+    gameGrid = mixCards([...cardsArray, ...cardsArray]),
     game = document.querySelector("#game"),
     grid = document.createElement("section"),
     groupButtons = document.createElement("section"),
@@ -78,7 +80,7 @@ let count = 0,
     chronometerCall;
 
 const match = () => {
-        let allCardSelected = document.querySelectorAll(".selected");
+        let allCardSelected = grid.querySelectorAll(".selected");
 
         for (const card of allCardSelected) {
             card.classList.add("match");
@@ -89,7 +91,7 @@ const match = () => {
         }
     },
     resetGuess = () => {
-        let allCardSelected = document.querySelectorAll(".selected");
+        let allCardSelected = grid.querySelectorAll(".selected");
         firstGuess = "";
         secondGuess = "";
         count = 0;
@@ -151,11 +153,15 @@ btnStart.addEventListener("click", function(event) {
 });
 
 btnRestart.addEventListener("click", function(event) {
-    let allCar = document.querySelectorAll(".card");
+    let allCar = grid.querySelectorAll(".card");
 
     for (const card of allCar) {
-        if (card.classList.contains("disabled-card")) {
+        if (
+            card.classList.contains("match") ||
+            card.classList.contains("selected")
+        ) {
             card.classList.remove("match");
+            card.classList.remove("selected");
         }
         card.classList.add("disabled-card");
     }
@@ -171,6 +177,8 @@ btnRestart.addEventListener("click", function(event) {
     chronometerDisplay.innerText = `${hours}:${minutes}:${seconds}`;
     btnStart.disabled = false;
     event.target.disabled = true;
+    firstGuess = null;
+    secondGuess = null;
 });
 
 for (const item of gameGrid) {
